@@ -55,7 +55,7 @@ func init() {
 	buildCmd.MarkFlagRequired("tag")
 
 	// Optional flag for source docker file
-	buildCmd.Flags().StringP("dockerfile", "f", "Dockerfile", "Dockerfile to use for building the image")
+	buildCmd.Flags().StringP("dockerfile", "f", "devel/main.Dockerfile", "Dockerfile to use for building the image")
 
 	// Optional flag for user name
 	buildCmd.Flags().StringP("user", "u", "compute", "User name to use in the image")

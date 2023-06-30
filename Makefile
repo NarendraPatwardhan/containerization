@@ -3,8 +3,8 @@ RESET := \033[0m
 
 .DEFAULT_GOAL := help
 
-.PHONY: build # Build flux
-build:
+.PHONY: flux # Build flux
+flux:
 	@echo "${BOLD}Building flux...${RESET}"
 	@cd cli && go build -o ../flux
 

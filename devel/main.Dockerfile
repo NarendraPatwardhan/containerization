@@ -220,6 +220,17 @@ RUN apt update && \
     $APT_INSTALL \
     elixir
 
+# Install Zig
+# ------------
+ARG ZIG_VERSION=0.10.1
+
+ENV PATH=$PATH:/usr/local/zig
+
+RUN curl -fsSL https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz \
+    --output zig.tar.xz \
+    && tar -xf zig.tar.xz && mv zig-linux-x86_64-${ZIG_VERSION} /usr/local/zig \
+    && rm zig.tar.xz
+
 # Install upx
 # ------------
 RUN apt update && \
