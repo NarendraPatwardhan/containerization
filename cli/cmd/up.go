@@ -42,38 +42,61 @@ var upCmd = &cobra.Command{
 			if err != nil {
 				fmt.Printf("Error creating shared directory %s\n", shared)
 				fmt.Println(err)
-				return
+				os.Exit(1)
 			}
 		}
-
-		// Get the docker group id using stat
-		dockerStat, err := os.Stat("/var/run/docker.sock")
-		if err != nil {
-			fmt.Println("Error getting docker group id")
-			fmt.Println(err)
-			return
-		}
-		dockerGroupID := fmt.Sprintf("%d", dockerStat.Sys().(*syscall.Stat_t).Gid)
 
 		// Get the user name from the flags
 		user, _ := cmd.Flags().GetString("user")
 
-		// Start the container in the background using docker
-		fmt.Printf("Starting container %s\n", name)
-		up := exec.Command("docker", "run", "-it", "-d",
-			// Mount the docker socket
-			"-v", "/var/run/docker.sock:/var/run/docker.sock",
+		opt := []string{
+			"docker", "run", "-it", "-d",
 			// Mount the shared directory
 			"-v", fmt.Sprintf("%s:/home/%s", shared, user),
 			// Use all GPUs
 			"--gpus", "all",
-			// Add the user to the docker group
-			"--group-add", dockerGroupID,
 			// Use the host network
 			"--network", "host",
-			fmt.Sprintf("--name=%s", name), fmt.Sprintf("%s:%s", image, tag))
+		}
 
-		err = up.Run()
+		// Get the recursive containerization from the flags
+		recursive, _ := cmd.Flags().GetString("recursive")
+		switch recursive {
+		case "docker":
+			// Get the docker group id using stat
+			dockerStat, err := os.Stat("/var/run/docker.sock")
+			if err != nil {
+				fmt.Println("Error getting docker group id")
+				fmt.Println(err)
+				return
+			}
+			dockerGroupID := fmt.Sprintf("%d", dockerStat.Sys().(*syscall.Stat_t).Gid)
+			opt = append(opt,
+				// Mount the docker socket
+				"-v", "/var/run/docker.sock:/var/run/docker.sock",
+				// Add the user to the docker group
+				"--group-add", dockerGroupID,
+			)
+		case "containerd":
+			// Referenced from https://github.com/containerd/containerd/discussions/5522
+			opt = append(opt,
+				"--privileged",
+				"-v", "/var/lib/containerd",
+				"--tmpfs", "/run",
+			)
+		default:
+			fmt.Printf("Unknown recursive containerization %s\n", recursive)
+			fmt.Println("Valid options are docker and containerd")
+			return
+		}
+
+		opt = append(opt, fmt.Sprintf("--name=%s", name), fmt.Sprintf("%s:%s", image, tag))
+
+		// Start the container in the background using docker
+		fmt.Printf("Starting container %s\n", name)
+		up := exec.Command("docker", opt...)
+
+		err := up.Run()
 		if err != nil {
 			fmt.Printf("Error starting container %s\n", name)
 			fmt.Println(err)
@@ -96,4 +119,7 @@ func init() {
 
 	// Optional flag for the user name
 	upCmd.Flags().StringP("user", "u", "compute", "User name to use in the container")
+
+	// Optional flag for the recursive containerization
+	upCmd.Flags().StringP("recursive", "r", "docker", "Recursive containerization")
 }
