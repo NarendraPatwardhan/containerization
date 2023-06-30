@@ -89,7 +89,7 @@ func init() {
 	upCmd.Flags().StringP("image", "i", "machinelearning.one/devel", "Name of the image to use")
 
 	// Optional flag for the image tag
-	upCmd.Flags().StringP("tag", "t", "latest", "Tag of the image to use")
+	upCmd.Flags().StringP("tag", "t", "main", "Tag of the image to use")
 
 	// Optional flag for the shared directory
 	upCmd.Flags().StringP("shared", "s", "", "Absolute path to the shared directory")
