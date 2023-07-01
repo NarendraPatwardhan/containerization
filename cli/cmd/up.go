@@ -50,19 +50,25 @@ var upCmd = &cobra.Command{
 		user, _ := cmd.Flags().GetString("user")
 
 		opt := []string{
-			"docker", "run", "-it", "-d",
-			// Mount the shared directory
-			"-v", fmt.Sprintf("%s:/home/%s", shared, user),
+			"run", "-it", "-d",
 			// Use all GPUs
 			"--gpus", "all",
 			// Use the host network
 			"--network", "host",
 		}
 
-		// Get the recursive containerization from the flags
+		// Mount the shared directory
+		if user != "root" {
+			opt = append(opt, "-v", fmt.Sprintf("%s:/home/%s", shared, user))
+		} else {
+			opt = append(opt, "-v", fmt.Sprintf("%s:/root", shared))
+		}
+
+		// Get the recursive profile from the flags
 		recursive, _ := cmd.Flags().GetString("recursive")
 		switch recursive {
 		case "docker":
+			// Uses Docker out of Docker setup
 			// Get the docker group id using stat
 			dockerStat, err := os.Stat("/var/run/docker.sock")
 			if err != nil {
@@ -78,15 +84,18 @@ var upCmd = &cobra.Command{
 				"--group-add", dockerGroupID,
 			)
 		case "containerd":
+			// Uses Containerd inside Docker setup
 			// Referenced from https://github.com/containerd/containerd/discussions/5522
 			opt = append(opt,
 				"--privileged",
 				"-v", "/var/lib/containerd",
 				"--tmpfs", "/run",
 			)
+		case "none":
+			// Do nothing
 		default:
 			fmt.Printf("Unknown recursive containerization %s\n", recursive)
-			fmt.Println("Valid options are docker and containerd")
+			fmt.Println("Valid options are docker, containerd and none")
 			return
 		}
 
@@ -121,5 +130,5 @@ func init() {
 	upCmd.Flags().StringP("user", "u", "compute", "User name to use in the container")
 
 	// Optional flag for the recursive containerization
-	upCmd.Flags().StringP("recursive", "r", "docker", "Recursive containerization")
+	upCmd.Flags().StringP("recursive", "r", "docker", "Recursive profile - docker, containerd or none")
 }

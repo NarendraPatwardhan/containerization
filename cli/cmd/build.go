@@ -21,16 +21,30 @@ var buildCmd = &cobra.Command{
 
 		user := cmd.Flag("user").Value.String()
 		password := cmd.Flag("password").Value.String()
+
+		if user != "root" && password == "" {
+			fmt.Println("Password is required for non-root user")
+			os.Exit(1)
+		}
+
 		author := cmd.Flag("author").Value.String()
 		email := cmd.Flag("email").Value.String()
 
-		// Run the docker build command
-		build := exec.Command("docker", "build",
-			"--build-arg", fmt.Sprintf("USERNAME=%s", user),
-			"--build-arg", fmt.Sprintf("PASSWORD=%s", password),
+		opt := []string{
+			"build",
 			"--build-arg", fmt.Sprintf("AUTHOR=%s", author),
 			"--build-arg", fmt.Sprintf("EMAIL=%s", email),
-			"-t", fmt.Sprintf("%s:%s", image, tag), "-f", file, ".")
+		}
+
+		if user != "root" {
+			opt = append(opt, "--build-arg", fmt.Sprintf("USERNAME=%s", user),
+				"--build-arg", fmt.Sprintf("PASSWORD=%s", password))
+		}
+
+		opt = append(opt, "-t", fmt.Sprintf("%s:%s", image, tag), "-f", file, ".")
+
+		// Run the docker build command
+		build := exec.Command("docker", opt...)
 		build.Stdout = cmd.OutOrStdout()
 		build.Stderr = cmd.OutOrStderr()
 		build.Env = os.Environ()
@@ -58,11 +72,10 @@ func init() {
 	buildCmd.Flags().StringP("dockerfile", "f", "devel/main.Dockerfile", "Dockerfile to use for building the image")
 
 	// Optional flag for user name
-	buildCmd.Flags().StringP("user", "u", "compute", "User name to use in the image")
+	buildCmd.Flags().StringP("user", "u", "compute", "Primary user name within the image")
 
 	// Required flag for password
-	buildCmd.Flags().StringP("password", "p", "", "Password to use in the image")
-	buildCmd.MarkFlagRequired("password")
+	buildCmd.Flags().StringP("password", "p", "", "Password to use in the image, required for non-root user")
 
 	// Optional flag for author name and email (for git)
 	buildCmd.Flags().StringP("author", "a", "Narendra Patwardhan", "Author name and email to use in the image")

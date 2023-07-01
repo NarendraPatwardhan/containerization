@@ -1,8 +1,8 @@
-# --------------------------
-# machinelearning-one/devel
-# --------------------------
+# -------------------------------
+# machinelearning-one/devel:main
+# -------------------------------
 # Set the base image
-# --------------------------
+# -------------------
 FROM ubuntu:22.04
 
 # Define required arguments
