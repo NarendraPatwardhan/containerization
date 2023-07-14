@@ -25,8 +25,6 @@ Use: Primary development environment
 - Elixir
 - Zig
 - upx
-- TexLive minimal
-- Manim
 
 To build:
 
@@ -117,4 +115,41 @@ To prune:
 ```bash
 ./flux down -p ${CONTAINER_NAME}
 docker volume prune
+```
+
+## The machinelearning/devel:tex image:
+
+Use: To write tex documents and create manim visualizations
+
+- Build essentials
+- Python 3
+    - Numfocus allied packages
+    - Quality of life packages
+    - Jupyterlab
+    - OpenCV
+- Texlive-full
+- Manim
+
+
+To build:
+
+```bash
+./flux build -t tex -f devel/tex.Dockerfile -p ${PASSWORD}
+```
+To run:
+
+```bash
+./flux up -t tex -r none ${CONTAINER_NAME}
+```
+
+To remove:
+
+```bash
+./flux down ${CONTAINER_NAME}
+```
+
+To prune:
+
+```bash
+./flux down -p ${CONTAINER_NAME}
 ```

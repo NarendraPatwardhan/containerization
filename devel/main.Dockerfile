@@ -236,31 +236,6 @@ RUN curl -fsSL https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZI
 RUN apt update && \
     $APT_INSTALL upx
 
-# Install texlive
-# ----------------
-RUN apt update && \
-    apt --assume-no install texlive-full | \
-    awk "/The following additional packages will be installed/{f=1;next} /Suggested packages/{f=0} f" | \
-    tr " " "\n" | \
-    grep -v "doc$" | \
-    grep -v "texlive-lang" | \
-    grep -v "latex-cjk" | \
-    tr "\n" " " > texpack && \
-    cat texpack | $APT_INSTALL && \
-    rm texpack && \
-    $APT_INSTALL texlive-lang-english texlive-lang-european
-
-
-# Install Manim
-# --------------
-RUN apt update && \
-    $APT_INSTALL \
-    libcairo2-dev \
-    libpango1.0-dev \
-    ffmpeg && \
-    $PIP_INSTALL \
-    manim
-
 # Perform cleanup
 # ---------------
 RUN ldconfig && \
