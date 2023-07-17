@@ -17,7 +17,8 @@ function allow_cgroup_nesting() {
 fi
 }
 
-function sync_setup() {
+# Cache the invocation to only run once through presence of a log file
+function setup() {
     # Make a directory /logs if it doesn't exist
     mkdir -p /logs
     # Check if cinc.log exists within /logs
@@ -28,4 +29,10 @@ function sync_setup() {
     fi
 }
 
-sync_setup
+setup
+
+if [[ $# -eq 0 ]]; then
+  exec "/bin/bash"
+else
+  exec "$@"
+fi

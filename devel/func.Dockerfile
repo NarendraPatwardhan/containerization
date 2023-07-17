@@ -95,6 +95,20 @@ RUN ldconfig && \
 RUN git config --global user.name "$AUTHOR" && \
     git config --global user.email "$EMAIL"
 
+# Install Tini
+# -------------
+ENV TINI_VERSION v0.19.0
+
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+
 # Copy the scripts/cinc.sh script to the container
 # -------------------------------------------------
-COPY scripts/cinc.sh /setup
+COPY scripts/cinc.sh /entrypoint.sh
+
+# Change permissions
+#--------------------
+RUN chmod +x /tini /entrypoint.sh
+
+# Set the entrypoint
+# -------------------
+ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
