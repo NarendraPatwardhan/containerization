@@ -24,6 +24,7 @@ Use: Primary development environment
 - Node
 - Elixir
 - Zig
+- Bazel
 - upx
 
 To build:
@@ -56,6 +57,7 @@ Use: To develop cuda applications
 - CUDA development essentials
 - Build essentials
 - Zig
+- Bazel
 - upx
 
 To build:
@@ -91,7 +93,8 @@ Use: To develop container ecosystem applications
 - RunC
 - CNI plugins
 - upx
-- cinc setup script
+
+Configured to run tini as pid 1 and cacheable cinc setup
 
 To build:
 
