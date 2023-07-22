@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 
+	env "github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +14,13 @@ var buildCmd = &cobra.Command{
 	Use:   "build",
 	Short: "Build the development container image",
 	Run: func(cmd *cobra.Command, args []string) {
+		// Load the environment variables
+		err := env.Load()
+		if err != nil {
+			fmt.Println("Error loading environment variables")
+			fmt.Println(err)
+			return
+		}
 		// Run the build command using docker
 		image, _ := cmd.Flags().GetString("image")
 		tag, _ := cmd.Flags().GetString("tag")
@@ -20,10 +28,11 @@ var buildCmd = &cobra.Command{
 		fmt.Printf("Building image %s:%s using %s\n", image, tag, file)
 
 		user := cmd.Flag("user").Value.String()
-		password := cmd.Flag("password").Value.String()
+
+		password := os.Getenv("PASSWORD")
 
 		if user != "root" && password == "" {
-			fmt.Println("Password is required for non-root user")
+			fmt.Println("Password is required for non-root user, please set PASSWORD environment variable")
 			os.Exit(1)
 		}
 
@@ -38,7 +47,7 @@ var buildCmd = &cobra.Command{
 
 		if user != "root" {
 			opt = append(opt, "--build-arg", fmt.Sprintf("USERNAME=%s", user),
-				"--build-arg", fmt.Sprintf("PASSWORD=%s", password))
+				"--secret", "id=password,env=PASSWORD")
 		}
 
 		opt = append(opt, "-t", fmt.Sprintf("%s:%s", image, tag), "-f", file, ".")
@@ -49,7 +58,7 @@ var buildCmd = &cobra.Command{
 		build.Stderr = cmd.OutOrStderr()
 		build.Env = os.Environ()
 		build.Env = append(build.Env, "DOCKER_BUILDKIT=1")
-		err := build.Run()
+		err = build.Run()
 		if err != nil {
 			fmt.Printf("Error building image %s:%s\n", image, tag)
 			fmt.Println(err)
@@ -73,9 +82,6 @@ func init() {
 
 	// Optional flag for user name
 	buildCmd.Flags().StringP("user", "u", "compute", "Primary user name within the image")
-
-	// Required flag for password
-	buildCmd.Flags().StringP("password", "p", "", "Password to use in the image, required for non-root user")
 
 	// Optional flag for author name and email (for git)
 	buildCmd.Flags().StringP("author", "a", "Narendra Patwardhan", "Author name and email to use in the image")

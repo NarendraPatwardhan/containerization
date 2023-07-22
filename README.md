@@ -4,6 +4,22 @@
 make flux
 ```
 
+## To set password for non-root user:
+
+Required for `main`, `cuda`, and `tex` images
+
+Copy the .env.tmpl file to .env and set the password
+
+```bash
+cp .env.tmpl .env
+```
+
+Replace the value for the password in the .env file
+
+```env
+PASSWORD={{VALUE}}
+```
+
 ## The machinelearning/devel:main image:
 
 Use: Primary development environment
@@ -30,7 +46,7 @@ Use: Primary development environment
 To build:
 
 ```bash
-./flux build -t main -p ${PASSWORD}
+./flux build -t main
 ```
 To run:
 
@@ -63,7 +79,7 @@ Use: To develop cuda applications
 To build:
 
 ```bash
-./flux build -t cuda -f devel/cuda.Dockerfile -p ${PASSWORD}
+./flux build -t cuda -f devel/cuda.Dockerfile
 ```
 To run:
 
@@ -137,7 +153,7 @@ Use: To write tex documents and create manim visualizations
 To build:
 
 ```bash
-./flux build -t tex -f devel/tex.Dockerfile -p ${PASSWORD}
+./flux build -t tex -f devel/tex.Dockerfile
 ```
 To run:
 

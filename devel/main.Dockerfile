@@ -254,7 +254,7 @@ RUN ldconfig && \
 
 # Create and configure the user
 # ------------------------------
-RUN useradd -m -s /bin/bash -p $(openssl passwd -1 $PASSWORD) $USERNAME && \
+RUN --mount=type=secret,id=password useradd -m -s /bin/bash -p $(openssl passwd -1 $(cat /run/secrets/password)) $USERNAME && \
     # Add the user to the sudo group
     # -------------------------------
     usermod -aG sudo $USERNAME && \
