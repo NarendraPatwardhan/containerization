@@ -121,7 +121,10 @@ RUN apt update && \
 
 # Install neovim
 # ---------------
-RUN add-apt-repository ppa:neovim-ppa/unstable && \
+RUN apt update && \
+    $APT_INSTALL \
+    gpg-agent && \
+    add-apt-repository ppa:neovim-ppa/unstable && \
     apt update && \
     $APT_INSTALL \
     neovim
