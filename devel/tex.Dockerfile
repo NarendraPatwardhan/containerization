@@ -119,6 +119,13 @@ RUN apt update && \
     $PIP_INSTALL \
     manim
 
+# Install neovim
+# ---------------
+RUN add-apt-repository ppa:neovim-ppa/unstable && \
+    apt update && \
+    $APT_INSTALL \
+    neovim
+
 # Perform cleanup
 # ---------------
 RUN ldconfig && \

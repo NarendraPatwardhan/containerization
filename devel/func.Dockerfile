@@ -83,6 +83,14 @@ RUN wget https://github.com/containernetworking/plugins/releases/download/v${CNI
 RUN apt update && \
     $APT_INSTALL upx
 
+# Install neovim
+# ---------------
+RUN add-apt-repository ppa:neovim-ppa/unstable && \
+    apt update && \
+    $APT_INSTALL \
+    neovim
+
+
 # Perform cleanup
 # ---------------
 RUN ldconfig && \

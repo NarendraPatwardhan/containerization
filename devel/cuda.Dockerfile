@@ -73,6 +73,14 @@ RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-
 RUN apt update && \
     $APT_INSTALL upx
 
+# Install neovim
+# ---------------
+RUN add-apt-repository ppa:neovim-ppa/unstable && \
+    apt update && \
+    $APT_INSTALL \
+    neovim
+
+
 # Perform cleanup
 # ---------------
 RUN ldconfig && \
