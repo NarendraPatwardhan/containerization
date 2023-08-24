@@ -172,3 +172,9 @@ To prune:
 ```bash
 ./flux down -p ${CONTAINER_NAME}
 ```
+
+## To connect to an existing container:
+
+```bash
+./flux connect ${CONTAINER_NAME}
+```
