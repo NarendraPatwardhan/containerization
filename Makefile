@@ -6,6 +6,7 @@ RESET := \033[0m
 .PHONY: flux # Build flux
 flux:
 	@echo "${BOLD}Building flux...${RESET}"
+	@cp README.md cli/info/README.md
 	@cd cli && go build -o ../flux
 
 .PHONY: help # Display the help message
