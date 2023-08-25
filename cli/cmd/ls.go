@@ -15,10 +15,10 @@ var lsCmd = &cobra.Command{
 	// Add validation that exactly one arg is present and is either "images" or "containers"
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {
-			return fmt.Errorf("ls requires exactly one arg")
+			return fmt.Errorf("accepts 1 arg, received %d", len(args))
 		}
 		if args[0] != "images" && args[0] != "containers" {
-			return fmt.Errorf("ls requires either 'images' or 'containers' as an arg")
+			return fmt.Errorf("arg must be either 'images' or 'containers', received %s", args[0])
 		}
 		return nil
 	},

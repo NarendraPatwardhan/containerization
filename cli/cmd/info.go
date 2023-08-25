@@ -11,6 +11,7 @@ import (
 var infoCmd = &cobra.Command{
 	Use:   "info",
 	Short: "Prints extended information about usage",
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Print the embedded README.md file
 		fmt.Println(string(info.Readme))

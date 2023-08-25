@@ -9,6 +9,11 @@ flux:
 	@cp README.md cli/info/README.md
 	@cd cli && go build -o ../flux
 
+.PHONY: keep # Copy the flux binary to /usr/local/bin
+keep: flux
+	@echo "${BOLD}Copying flux to /usr/local/bin...${RESET}"
+	@sudo cp flux /usr/local/bin/flux
+
 .PHONY: images # Build all the images
 images: flux
 	@echo "${BOLD}Building images...${RESET}"
