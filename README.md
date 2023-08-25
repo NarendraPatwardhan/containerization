@@ -178,3 +178,39 @@ To prune:
 ```bash
 ./flux connect ${CONTAINER_NAME}
 ```
+
+## Hooks
+
+### SSH Key Generation
+
+To push code to remote repositories, it is recommended to use ssh over https. To generate a key pair, the following command is typically run:
+
+```bash
+ssh-keygen -t ed25519 -C ${COMMENT}
+```
+Flux provides a thin utility wrapper to make this process easier:
+
+```bash
+./flux hooks ssh-keygen ${CONTAINER_NAME}
+```
+
+You can optionally specify a comment for the key.
+```bash
+./flux hooks ssh-keygen -c ${COMMENT} ${CONTAINER_NAME}
+```
+
+It is recommended you set up a passphrase different from user password.
+
+If you accept the default prompt for the location, public key can be found at ~/.ssh/id_ed25519.pub, otherwise it would be at the location you specified.
+
+Copy the public key and follow the instructions of your VCS provider (GitHub/GitLab etc.) to assign it as trusted.
+
+### Neovim as IDE Setup
+
+To setup neovim as an IDE, run the following command:
+
+```bash
+./flux hooks nvim-setup ${CONTAINER_NAME}
+```
+
+This installs nvchad and pulls a personal configuration that works in a polyglot environment.
