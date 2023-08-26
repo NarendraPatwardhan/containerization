@@ -83,15 +83,15 @@ RUN wget https://github.com/containernetworking/plugins/releases/download/v${CNI
 RUN apt update && \
     $APT_INSTALL upx
 
-# Install neovim
-# ---------------
+# Install neovim and tmux
+# ------------------------
 RUN apt update && \
     $APT_INSTALL \
     gpg-agent && \
     add-apt-repository ppa:neovim-ppa/unstable && \
     apt update && \
     $APT_INSTALL \
-    neovim
+    neovim tmux
 
 
 # Perform cleanup
