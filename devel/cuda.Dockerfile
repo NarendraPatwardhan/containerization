@@ -19,14 +19,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # Setup the locale
 # -----------------
-RUN apt update && \
-    $APT_INSTALL locales && \
-    locale-gen en_US.UTF-8 && \
-    echo LANG=en_US.UTF-8 > /etc/default/locale
-
-ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
+ENV LANG=C.UTF-8
 
 # Install basic utilities
 # ------------------------
