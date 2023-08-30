@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -13,13 +14,11 @@ import (
 var buildCmd = &cobra.Command{
 	Use:   "build",
 	Short: "Build the development container image",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, _ []string) error {
 		// Load the environment variables
 		err := env.Load()
 		if err != nil {
-			fmt.Println("Error loading environment variables")
-			fmt.Println(err)
-			return
+			return errors.Join(errors.New("Error loading environment variables"), err)
 		}
 		// Run the build command using docker
 		image, _ := cmd.Flags().GetString("image")
@@ -32,8 +31,9 @@ var buildCmd = &cobra.Command{
 		password := os.Getenv("PASSWORD")
 
 		if user != "root" && password == "" {
-			fmt.Println("Password is required for non-root user, please set PASSWORD environment variable")
-			os.Exit(1)
+			return errors.New(
+				"Password is required for non-root user, please set PASSWORD environment variable",
+			)
 		}
 
 		author := cmd.Flag("author").Value.String()
@@ -60,10 +60,12 @@ var buildCmd = &cobra.Command{
 		build.Env = append(build.Env, "DOCKER_BUILDKIT=1")
 		err = build.Run()
 		if err != nil {
-			fmt.Printf("Error building image %s:%s\n", image, tag)
-			fmt.Println(err)
-			return
+			return errors.Join(
+				errors.New(fmt.Sprintf("Error building image %s:%s", image, tag)),
+				err,
+			)
 		}
+		return nil
 	},
 }
 
@@ -71,19 +73,23 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	// Optional flag for target image name
-	buildCmd.Flags().StringP("image", "i", "machinelearning.one/devel", "Name of the image to build")
+	buildCmd.Flags().
+		StringP("image", "i", "machinelearning.one/devel", "Name of the image to build")
 
 	// Required flag for target image tag
 	buildCmd.Flags().StringP("tag", "t", "", "Tag of the image to build")
 	buildCmd.MarkFlagRequired("tag")
 
 	// Optional flag for source docker file
-	buildCmd.Flags().StringP("dockerfile", "f", "devel/main.Dockerfile", "Dockerfile to use for building the image")
+	buildCmd.Flags().
+		StringP("dockerfile", "f", "devel/main.Dockerfile", "Dockerfile to use for building the image")
 
 	// Optional flag for user name
 	buildCmd.Flags().StringP("user", "u", "compute", "Primary user name within the image")
 
 	// Optional flag for author name and email (for git)
-	buildCmd.Flags().StringP("author", "a", "Narendra Patwardhan", "Author name and email to use in the image")
-	buildCmd.Flags().StringP("email", "e", "narendra@machinelearning.one", "Author email to use in the image")
+	buildCmd.Flags().
+		StringP("author", "a", "Narendra Patwardhan", "Author name and email to use in the image")
+	buildCmd.Flags().
+		StringP("email", "e", "narendra@machinelearning.one", "Author email to use in the image")
 }

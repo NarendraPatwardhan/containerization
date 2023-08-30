@@ -14,7 +14,7 @@ var nvimSetupCmd = &cobra.Command{
 	Use:   "nvim-setup",
 	Short: "Setup nvim for development",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		// Get the first argument as the container name
 		name := args[0]
 

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -13,20 +14,21 @@ var lsCmd = &cobra.Command{
 	Use:   "ls",
 	Short: "List all flux-compatible containers",
 	// Add validation that exactly one arg is present and is either "images" or "containers"
-	Args: func(cmd *cobra.Command, args []string) error {
+	Args: func(_ *cobra.Command, args []string) error {
 		if len(args) != 1 {
-			return fmt.Errorf("accepts 1 arg, received %d", len(args))
+			return errors.New(fmt.Sprintf("accepts 1 arg, received %d", len(args)))
 		}
 		if args[0] != "images" && args[0] != "containers" {
-			return fmt.Errorf("arg must be either 'images' or 'containers', received %s", args[0])
+			return errors.New(
+				fmt.Sprintf("arg must be either 'images' or 'containers', received %s", args[0]),
+			)
 		}
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		kind := args[0]
 		if kind == "containers" {
 			ls([]string{"docker", "ps", "-a"}, 1, "machinelearning.one")
-
 		}
 		if kind == "images" {
 			ls([]string{"docker", "images"}, 0, "machinelearning.one")

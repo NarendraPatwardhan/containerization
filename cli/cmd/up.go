@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,7 +16,7 @@ var upCmd = &cobra.Command{
 	Short: "Spin up a development container",
 	// Accept exactly one argument
 	Args: cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		// Get the first argument as the container name
 		name := args[0]
 
@@ -29,9 +30,7 @@ var upCmd = &cobra.Command{
 			// Get the home directory
 			home, err := os.UserHomeDir()
 			if err != nil {
-				fmt.Println("Error getting home directory")
-				fmt.Println(err)
-				return
+				return errors.Join(errors.New("Error getting home directory"), err)
 			}
 			shared = fmt.Sprintf("%s/Workspace/Shared/%s", home, name)
 		}
@@ -40,9 +39,7 @@ var upCmd = &cobra.Command{
 		if _, err := os.Stat(shared); os.IsNotExist(err) {
 			err := os.MkdirAll(shared, 0755)
 			if err != nil {
-				fmt.Printf("Error creating shared directory %s\n", shared)
-				fmt.Println(err)
-				os.Exit(1)
+				return errors.Join(errors.New("Error creating shared directory"), err)
 			}
 		}
 
@@ -72,9 +69,7 @@ var upCmd = &cobra.Command{
 			// Get the docker group id using stat
 			dockerStat, err := os.Stat("/var/run/docker.sock")
 			if err != nil {
-				fmt.Println("Error getting docker group id")
-				fmt.Println(err)
-				return
+				return errors.Join(errors.New("Error getting docker group id"), err)
 			}
 			dockerGroupID := fmt.Sprintf("%d", dockerStat.Sys().(*syscall.Stat_t).Gid)
 			opt = append(opt,
@@ -94,9 +89,12 @@ var upCmd = &cobra.Command{
 		case "none":
 			// Do nothing
 		default:
-			fmt.Printf("Unknown recursive containerization %s\n", recursive)
-			fmt.Println("Valid options are docker, containerd and none")
-			return
+			return errors.New(
+				fmt.Sprintf(
+					"Unknown recursive containerization %s\n, valid options are docker, containerd and none",
+					recursive,
+				),
+			)
 		}
 
 		opt = append(opt, fmt.Sprintf("--name=%s", name), fmt.Sprintf("%s:%s", image, tag))
@@ -107,10 +105,9 @@ var upCmd = &cobra.Command{
 
 		err := up.Run()
 		if err != nil {
-			fmt.Printf("Error starting container %s\n", name)
-			fmt.Println(err)
-			return
+			return errors.Join(errors.New("Error starting container"), err)
 		}
+		return nil
 	},
 }
 
@@ -130,5 +127,6 @@ func init() {
 	upCmd.Flags().StringP("user", "u", "compute", "User name to use in the container")
 
 	// Optional flag for the recursive containerization
-	upCmd.Flags().StringP("recursive", "r", "docker", "Recursive profile - docker, containerd or none")
+	upCmd.Flags().
+		StringP("recursive", "r", "docker", "Recursive profile - docker, containerd or none")
 }
