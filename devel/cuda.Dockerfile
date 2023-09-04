@@ -43,7 +43,7 @@ RUN apt update && \
 
 # Install Zig
 # ------------
-ARG ZIG_VERSION=0.10.1
+ARG ZIG_VERSION=0.11.0
 
 ENV PATH=$PATH:/usr/local/zig
 

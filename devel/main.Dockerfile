@@ -153,7 +153,7 @@ RUN $PIP_INSTALL \
 # Install Rust
 # -------------
 ARG RUSTUP_VERSION=1.26.0
-ARG RUST_VERSION=1.69.0
+ARG RUST_VERSION=1.72.0
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
@@ -169,7 +169,7 @@ RUN RUST_ARCH=x86_64-unknown-linux-gnu && \
 
 # Install Go
 # -----------
-ARG GO_VERSION=1.20.3
+ARG GO_VERSION=1.21.0
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -179,7 +179,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Deno
 # -------------
-ARG DENO_VERSION=1.33.0
+ARG DENO_VERSION=1.36.4
 
 RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip \
     --output deno.zip \
@@ -189,8 +189,8 @@ RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSIO
 
 # Install NVM and Node, enable alternative package managers
 # ----------------------------------------------------------
-ARG NVM_VERSION=v0.39.3
-ARG NODE_VERSION=18.16.0
+ARG NVM_VERSION=v0.39.5
+ARG NODE_VERSION=18.17.1
 
 ENV NVM_DIR=/usr/local/nvm \
     NODE_PATH=$NVM_DIR/v${NODE_VERSION}/lib/node_modules \
@@ -215,7 +215,7 @@ RUN apt update && \
 
 # Install Zig
 # ------------
-ARG ZIG_VERSION=0.10.1
+ARG ZIG_VERSION=0.11.0
 
 ENV PATH=$PATH:/usr/local/zig
 

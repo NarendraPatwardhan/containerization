@@ -41,7 +41,7 @@ RUN apt update && \
 
 # Install Go
 # -----------
-ARG GO_VERSION=1.20.5
+ARG GO_VERSION=1.21.0
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -51,14 +51,14 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Containerd
 # -------------------
-ENV CONTAINERD_VERSION="1.7.2"
+ENV CONTAINERD_VERSION="1.7.5"
 
 RUN  wget https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz -O /tmp/containerd.tar.gz && \
     tar -C /usr/local -xvf /tmp/containerd.tar.gz
 
 # Install RunC
 # -------------
-ENV RUNC_VERSION="1.1.7"
+ENV RUNC_VERSION="1.1.9"
 
 RUN wget https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64 -O /tmp/runc.amd64 && \
     install -m 755 /tmp/runc.amd64 /usr/local/sbin/runc
