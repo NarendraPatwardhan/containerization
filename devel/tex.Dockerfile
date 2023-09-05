@@ -51,6 +51,7 @@ RUN apt update && \
     python3.10 \
     python3.10-dev \
     python3.10-distutils \
+    python3.10-venv \
     && \
     curl -o ~/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
     python3.10 ~/get-pip.py && \
