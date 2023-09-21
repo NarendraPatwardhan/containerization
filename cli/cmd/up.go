@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"syscall"
 
 	"github.com/spf13/cobra"
@@ -52,6 +53,12 @@ var upCmd = &cobra.Command{
 			"--gpus", "all",
 			// Use the host network
 			"--network", "host",
+		}
+
+		if runtime.GOOS == "linux" {
+			opt = append(opt, "-e", "DISPLAY")
+			opt = append(opt, "-v", "/tmp/.X11-unix:/tmp/.X11-unix")
+			opt = append(opt, "-v", fmt.Sprintf("%s:/root/.Xauthority", os.Getenv("XAUTHORITY")))
 		}
 
 		// Mount the shared directory
