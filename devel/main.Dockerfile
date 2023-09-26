@@ -225,6 +225,12 @@ RUN curl -fsSL https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZI
     && tar -xf zig.tar.xz && mv zig-linux-x86_64-${ZIG_VERSION} /usr/local/zig \
     && rm zig.tar.xz
 
+# Install Opam
+# -------------
+RUN apt update && \
+    $APT_INSTALL \
+    opam
+
 # Install Bazel
 # --------------
 RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg && \
