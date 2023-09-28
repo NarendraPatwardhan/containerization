@@ -26,13 +26,13 @@ Use: Primary development environment
 
 - Build essentials
 - Python 3
-    - Numfocus allied packages
-    - Jax and allied packages
-    - Pytorch and allied packages
-    - Onnx
-    - Quality of life packages
-    - Jupyterlab
-    - OpenCV
+  - Numfocus allied packages
+  - Jax and allied packages
+  - Pytorch and allied packages
+  - Onnx
+  - Quality of life packages
+  - Jupyterlab
+  - OpenCV
 - Docker out of docker
 - Rust
 - Go
@@ -48,6 +48,7 @@ To build:
 ```bash
 ./flux build -t main
 ```
+
 To run:
 
 ```bash
@@ -81,6 +82,7 @@ To build:
 ```bash
 ./flux build -t cuda -f devel/cuda.Dockerfile
 ```
+
 To run:
 
 ```bash
@@ -117,6 +119,7 @@ To build:
 ```bash
 ./flux build -t func -f devel/func.Dockerfile -u root
 ```
+
 To run:
 
 ```bash
@@ -142,19 +145,19 @@ Use: To write tex documents and create manim visualizations
 
 - Build essentials
 - Python 3
-    - Numfocus allied packages
-    - Quality of life packages
-    - Jupyterlab
-    - OpenCV
+  - Numfocus allied packages
+  - Quality of life packages
+  - Jupyterlab
+  - OpenCV
 - Texlive-full
 - Manim
-
 
 To build:
 
 ```bash
 ./flux build -t tex -f devel/tex.Dockerfile
 ```
+
 To run:
 
 ```bash
@@ -179,15 +182,29 @@ To prune:
 ./flux connect ${CONTAINER_NAME}
 ```
 
+## Additional arguments
+
+To provide any additional arguments while spinning up the docker container
+
+```bash
+./flux up ${CONTAINER_NAME} -a ${AdditionalArgSlice0} -a ${AdditionalArgSlice1} ..
+```
+
+The additional arguments are first sliced by the comma (,) before being
+collected. Each entry is then sliced by space ( ) and stripped of whitespace on
+either ends before being appended to underlying command.
+
 ## Hooks
 
 ### SSH Key Generation
 
-To push code to remote repositories, it is recommended to use ssh over https. To generate a key pair, the following command is typically run:
+To push code to remote repositories, it is recommended to use ssh over https. To
+generate a key pair, the following command is typically run:
 
 ```bash
 ssh-keygen -t ed25519 -C ${COMMENT}
 ```
+
 Flux provides a thin utility wrapper to make this process easier:
 
 ```bash
@@ -195,15 +212,18 @@ Flux provides a thin utility wrapper to make this process easier:
 ```
 
 You can optionally specify a comment for the key.
+
 ```bash
 ./flux hooks ssh-keygen -c ${COMMENT} ${CONTAINER_NAME}
 ```
 
 It is recommended you set up a passphrase different from user password.
 
-If you accept the default prompt for the location, public key can be found at ~/.ssh/id_ed25519.pub, otherwise it would be at the location you specified.
+If you accept the default prompt for the location, public key can be found at
+~/.ssh/id_ed25519.pub, otherwise it would be at the location you specified.
 
-Copy the public key and follow the instructions of your VCS provider (GitHub/GitLab etc.) to assign it as trusted.
+Copy the public key and follow the instructions of your VCS provider
+(GitHub/GitLab etc.) to assign it as trusted.
 
 ### Neovim as IDE Setup
 
@@ -213,4 +233,5 @@ To setup neovim as an IDE, run the following command:
 ./flux hooks nvim-setup ${CONTAINER_NAME}
 ```
 
-This installs nvchad and pulls a personal configuration that works in a polyglot environment.
+This installs nvchad and pulls a personal configuration that works in a polyglot
+environment.

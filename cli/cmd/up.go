@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 	"syscall"
 
 	"github.com/spf13/cobra"
@@ -50,7 +51,7 @@ var upCmd = &cobra.Command{
 		opt := []string{
 			"run", "-it", "-d",
 			// Use all GPUs
-			"--gpus", "all",
+			"--gpus", "all,\"capabilities=compute,utility,graphics,display\"",
 			// Use the host network
 			"--network", "host",
 		}
@@ -104,6 +105,14 @@ var upCmd = &cobra.Command{
 			)
 		}
 
+		extraArgs, _ := cmd.Flags().GetStringSlice("extra-args")
+		for _, extraArg := range extraArgs {
+			normalizedExtraArg := strings.Split(extraArg, " ")
+			for _, neArg := range normalizedExtraArg {
+				opt = append(opt, strings.TrimSpace(neArg))
+			}
+		}
+
 		opt = append(opt, fmt.Sprintf("--name=%s", name), fmt.Sprintf("%s:%s", image, tag))
 
 		// Start the container in the background using docker
@@ -136,4 +145,8 @@ func init() {
 	// Optional flag for the recursive containerization
 	upCmd.Flags().
 		StringP("recursive", "r", "docker", "Recursive profile - docker, containerd or none")
+
+	// Optional flag for additional arguments
+	upCmd.Flags().
+		StringSliceP("extra-args", "a", []string{}, "Additional arguments to pass to the container")
 }
