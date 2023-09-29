@@ -69,7 +69,18 @@ ENV CNI_PLUGINS_VERSION="1.3.0"
 
 RUN wget https://github.com/containernetworking/plugins/releases/download/v${CNI_PLUGINS_VERSION}/cni-plugins-linux-amd64-v${CNI_PLUGINS_VERSION}.tgz -O /tmp/cni-plugins.tgz && \
     mkdir -p /opt/cni/bin && \
-    tar -xzvf /tmp/cni-plugins.tgz -C /opt/cni/bin    
+    tar -xzvf /tmp/cni-plugins.tgz -C /opt/cni/bin && \
+    apt update && \
+    $APT_INSTALL iptables
+
+# Install Nerdctl for quick debug
+# --------------------------------
+ENV NERDCTL_VERSION="1.6.0"
+
+RUN wget https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
+    tar -C /usr/local/bin/ -xzf /tmp/nerdctl.tar.gz && \
+    rm /tmp/nerdctl.tar.gz
+
 
 # Install upx
 # ------------
