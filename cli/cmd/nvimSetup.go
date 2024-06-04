@@ -28,8 +28,7 @@ var nvimSetupCmd = &cobra.Command{
 		script := []string{
 			"rm -rf ~/.config/nvim",
 			"rm -rf ~/.local/share/nvim",
-			"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1",
-			"git clone https://github.com/NarendraPatwardhan/editorconfig ~/.config/nvim/lua/custom",
+			"git clone https://github.com/NarendraPatwardhan/editorconfig.git ~/.config/nvim --depth 1",
 		}
 
 		// Create array of exec arguments by joining the script array with exec -it name /bin/bash -c
