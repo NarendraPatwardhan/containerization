@@ -41,7 +41,7 @@ RUN apt update && \
 
 # Install Go
 # -----------
-ARG GO_VERSION=1.21.0
+ARG GO_VERSION=1.22.4
 
 ENV PATH=$PATH:/usr/local/go/bin
 

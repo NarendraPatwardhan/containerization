@@ -3,7 +3,7 @@
 # -------------------------------
 # Set the base image
 # -------------------
-FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 
 # Define required arguments
 # --------------------------
@@ -43,7 +43,7 @@ RUN apt update && \
 
 # Install Zig
 # ------------
-ARG ZIG_VERSION=0.11.0
+ARG ZIG_VERSION=0.13.0
 
 ENV PATH=$PATH:/usr/local/zig
 

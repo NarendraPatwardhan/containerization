@@ -16,7 +16,7 @@ ARG PASSWORD
 # ------------------------------------------
 ENV DEBIAN_FRONTEND=noninteractive \
     APT_INSTALL="apt install -y --no-install-recommends" \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade"
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade"
 
 # Setup the locale
 # -----------------
@@ -42,20 +42,19 @@ RUN apt update && \
     unzip \
     unrar
 
-# Install python 3.10 and pip
+# Install python 3 and pip
 # ---------------------------
 ENV PATH=$PATH:~/.local/bin
 
 RUN apt update && \
     $APT_INSTALL \
-    python3.10 \
-    python3.10-dev \
-    python3.10-distutils \
-    python3.10-venv \
+    python3 \
+    python3-dev \
+    python3-distutils \
+    python3-venv \
     && \
     curl -o ~/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python3.10 ~/get-pip.py && \
-    ln -s /usr/bin/python3.10 /usr/local/bin/python
+    python3 ~/get-pip.py
 
 # Install numfocus and allied packages
 # -------------------------------------

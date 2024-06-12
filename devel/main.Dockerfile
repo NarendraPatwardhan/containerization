@@ -16,7 +16,7 @@ ARG PASSWORD
 # ------------------------------------------
 ENV DEBIAN_FRONTEND=noninteractive \
     APT_INSTALL="apt install -y --no-install-recommends" \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade"
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade"
 
 # Setup the locale
 # -----------------
@@ -42,20 +42,19 @@ RUN apt update && \
     unzip \
     unrar
 
-# Install python 3.10 and pip
+# Install python 3 and pip
 # ---------------------------
 ENV PATH=$PATH:~/.local/bin
 
 RUN apt update && \
     $APT_INSTALL \
-    python3.10 \
-    python3.10-dev \
-    python3.10-distutils \
-    python3.10-venv \
+    python3 \
+    python3-dev \
+    python3-distutils \
+    python3-venv \
     && \
     curl -o ~/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python3.10 ~/get-pip.py && \
-    ln -s /usr/bin/python3.10 /usr/local/bin/python
+    python3 ~/get-pip.py
 
 # Install numfocus and allied packages
 # -------------------------------------
@@ -139,8 +138,8 @@ RUN apt update && \
 RUN apt update && \
     $APT_INSTALL \
     gpg-agent && \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable" && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     $APT_INSTALL \
     docker-ce-cli \
     docker-compose-plugin \
@@ -153,8 +152,8 @@ RUN $PIP_INSTALL \
 
 # Install Rust
 # -------------
-ARG RUSTUP_VERSION=1.26.0
-ARG RUST_VERSION=1.72.0
+ARG RUSTUP_VERSION=1.27.1
+ARG RUST_VERSION=1.78.0
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
@@ -170,7 +169,7 @@ RUN RUST_ARCH=x86_64-unknown-linux-gnu && \
 
 # Install Go
 # -----------
-ARG GO_VERSION=1.21.0
+ARG GO_VERSION=1.22.4
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -180,7 +179,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Deno
 # -------------
-ARG DENO_VERSION=1.36.4
+ARG DENO_VERSION=1.44.1
 
 RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip \
     --output deno.zip \
@@ -190,8 +189,8 @@ RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSIO
 
 # Install NVM and Node, enable alternative package managers
 # ----------------------------------------------------------
-ARG NVM_VERSION=v0.39.5
-ARG NODE_VERSION=18.17.1
+ARG NVM_VERSION=v0.39.7
+ARG NODE_VERSION=20.14.0
 
 ENV NVM_DIR=/usr/local/nvm \
     NODE_PATH=$NVM_DIR/v${NODE_VERSION}/lib/node_modules \
@@ -216,7 +215,7 @@ RUN apt update && \
 
 # Install Zig
 # ------------
-ARG ZIG_VERSION=0.11.0
+ARG ZIG_VERSION=0.13.0
 
 ENV PATH=$PATH:/usr/local/zig
 
