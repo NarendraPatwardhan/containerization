@@ -41,5 +41,5 @@ func init() {
 	hooksCmd.AddCommand(sshKeygenCmd)
 
 	// Optional flag for ssh-keygen comment
-	hooksCmd.Flags().StringP("comment", "c", "machinelearning.one/devel", "Key Identifier")
+	sshKeygenCmd.Flags().StringP("comment", "c", "machinelearning.one/devel", "Key Identifier")
 }
