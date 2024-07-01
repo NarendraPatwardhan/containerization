@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import re
 from typing import Dict, Optional, Tuple

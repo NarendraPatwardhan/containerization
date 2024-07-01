@@ -14,6 +14,11 @@ keep: flux
 	@echo "${BOLD}Copying flux to /usr/local/bin...${RESET}"
 	@sudo cp flux /usr/local/bin/flux
 
+.PHONY: update # Update software within Dockerfiles to latest stable release
+update:
+	@echo "${BOLD}Updating Dockerfiles to latest stable releases...${RESET}"
+	@python3 update.py
+
 .PHONY: images # Build all the images
 images: flux
 	@echo "${BOLD}Building images...${RESET}"
