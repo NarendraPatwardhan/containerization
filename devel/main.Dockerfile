@@ -154,7 +154,7 @@ RUN $PIP_INSTALL \
 # Install Rust
 # -------------
 ARG RUSTUP_VERSION=1.27.1
-ARG RUST_VERSION=1.78.0
+ARG RUST_VERSION="1.79.0"
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
@@ -180,7 +180,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Deno
 # -------------
-ARG DENO_VERSION=1.44.1
+ARG DENO_VERSION="1.44.4"
 
 RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip \
     --output deno.zip \
@@ -190,8 +190,8 @@ RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSIO
 
 # Install NVM and Node, enable alternative package managers
 # ----------------------------------------------------------
-ARG NVM_VERSION=v0.39.7
-ARG NODE_VERSION=20.14.0
+ARG NVM_VERSION="0.39.7"
+ARG NODE_VERSION="22.3.0"
 
 ENV NVM_DIR=/usr/local/nvm \
     NODE_PATH=$NVM_DIR/v${NODE_VERSION}/lib/node_modules \
