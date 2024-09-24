@@ -41,7 +41,7 @@ RUN apt update && \
 
 # Install Go
 # -----------
-ARG GO_VERSION=1.22.4
+ARG GO_VERSION="1.23.1"
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -51,14 +51,14 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Containerd
 # -------------------
-ARG CONTAINERD_VERSION="1.7.18"
+ARG CONTAINERD_VERSION="1.7.22"
 
 RUN  wget https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz -O /tmp/containerd.tar.gz && \
     tar -C /usr/local -xvf /tmp/containerd.tar.gz
 
 # Install RunC
 # -------------
-ARG RUNC_VERSION="1.1.13"
+ARG RUNC_VERSION="1.1.14"
 
 RUN wget https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64 -O /tmp/runc.amd64 && \
     install -m 755 /tmp/runc.amd64 /usr/local/sbin/runc
@@ -75,7 +75,7 @@ RUN wget https://github.com/containernetworking/plugins/releases/download/v${CNI
 
 # Install Nerdctl for quick debug
 # --------------------------------
-ARG NERDCTL_VERSION="1.7.6"
+ARG NERDCTL_VERSION="1.7.7"
 
 RUN wget https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
     tar -C /usr/local/bin/ -xzf /tmp/nerdctl.tar.gz && \
@@ -112,7 +112,7 @@ RUN git config --global user.name "$AUTHOR" && \
 
 # Install Tini
 # -------------
-ARG TINI_VERSION v0.19.0
+ENV TINI_VERSION v0.19.0
 
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 

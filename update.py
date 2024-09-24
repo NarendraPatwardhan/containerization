@@ -71,14 +71,15 @@ def update_dockerfiles(name: str, latest_version: str):
     """Update all Dockerfiles with the latest version."""
 
     def update_func(lines):
-        return [
-            (
-                f'ARG {name}="{latest_version}"\n'
-                if line.startswith(f"ARG {name}=")
-                else line
-            )
-            for line in lines
-        ]
+        updated_lines = []
+        for line in lines:
+            if line.startswith(f"ARG {name}="):
+                updated_lines.append(f'ARG {name}="{latest_version}"\n')
+            elif line.startswith(f"ENV {name} "):
+                updated_lines.append(f'ENV {name} {latest_version}\n')
+            else:
+                updated_lines.append(line)
+        return updated_lines
 
     for filename in os.listdir("devel"):
         if filename.endswith(".Dockerfile"):
@@ -113,6 +114,7 @@ def main():
         "NVM_VERSION": ("nvm-sh/nvm", True),
         "NODE_VERSION": ("nodejs/node", True),
         "ZIG_VERSION": ("ziglang/zig", True),
+        "BAZELISK_VERSION": ("bazelbuild/bazelisk", True),
         "TINI_VERSION": ("krallin/tini", True),
         "CONTAINERD_VERSION": ("containerd/containerd", True),
         "RUNC_VERSION": ("opencontainers/runc", True),

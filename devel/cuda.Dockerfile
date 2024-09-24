@@ -53,13 +53,13 @@ RUN curl -fsSL https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZI
     && rm zig.tar.xz
 
 # Install Bazel
+
 # --------------
-RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg && \
-    mv bazel-archive-keyring.gpg /usr/share/keyrings && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
-    apt update && \
-    $APT_INSTALL \
-    bazel
+# Install Bazel
+# --------------
+ARG BAZELISK_VERSION=1.21.0
+
+RUN curl -fsSL -o /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 && chmod +x /usr/local/bin/bazel
 
 # Install upx
 # ------------

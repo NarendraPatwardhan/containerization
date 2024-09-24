@@ -154,7 +154,7 @@ RUN $PIP_INSTALL \
 # Install Rust
 # -------------
 ARG RUSTUP_VERSION=1.27.1
-ARG RUST_VERSION="1.79.0"
+ARG RUST_VERSION="1.81.0"
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
@@ -170,7 +170,7 @@ RUN RUST_ARCH=x86_64-unknown-linux-gnu && \
 
 # Install Go
 # -----------
-ARG GO_VERSION=1.22.4
+ARG GO_VERSION="1.23.1"
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -180,7 +180,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Deno
 # -------------
-ARG DENO_VERSION="1.44.4"
+ARG DENO_VERSION="1.46.3"
 
 RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip \
     --output deno.zip \
@@ -190,15 +190,15 @@ RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSIO
 
 # Install NVM and Node, enable alternative package managers
 # ----------------------------------------------------------
-ARG NVM_VERSION="0.39.7"
-ARG NODE_VERSION="22.3.0"
+ARG NVM_VERSION="0.40.1"
+ARG NODE_VERSION="22.9.0"
 
 ENV NVM_DIR=/usr/local/nvm \
     NODE_PATH=$NVM_DIR/v${NODE_VERSION}/lib/node_modules \
     PATH=$PATH:$NVM_DIR/versions/node/v${NODE_VERSION}/bin
 
 RUN mkdir -p $NVM_DIR && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | /bin/bash && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | /bin/bash && \
     . ${NVM_DIR}/nvm.sh && \
     . ${NVM_DIR}/bash_completion && \
     echo ". ${NVM_DIR}/nvm.sh" >> /etc/bash.bashrc && \
@@ -234,12 +234,9 @@ RUN apt update && \
 
 # Install Bazel
 # --------------
-RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg && \
-    mv bazel-archive-keyring.gpg /usr/share/keyrings && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
-    apt update && \
-    $APT_INSTALL \
-    bazel
+ARG BAZELISK_VERSION=1.21.0
+
+RUN curl -fsSL -o /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 && chmod +x /usr/local/bin/bazel
 
 # Install upx
 # ------------
