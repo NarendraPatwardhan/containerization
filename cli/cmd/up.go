@@ -56,10 +56,18 @@ var upCmd = &cobra.Command{
 			"--network", "host",
 		}
 
+		x11, _ := cmd.Flags().GetBool("x11")
+
 		if runtime.GOOS == "linux" {
-			opt = append(opt, "-e", "DISPLAY")
-			opt = append(opt, "-v", "/tmp/.X11-unix:/tmp/.X11-unix")
-			opt = append(opt, "-v", fmt.Sprintf("%s:/root/.Xauthority", os.Getenv("XAUTHORITY")))
+			if !x11 {
+				opt = append(opt, "-e", "XDG_RUNTIME_DIR=/tmp")
+				opt = append(opt, "-e", fmt.Sprintf("WAYLAND_DISPLAY=%s", os.Getenv("WAYLAND_DISPLAY")))
+				opt = append(opt, "-v", fmt.Sprintf("%s/%s:/tmp/%s", os.Getenv("XDG_RUNTIME_DIR"), os.Getenv("WAYLAND_DISPLAY"), os.Getenv("WAYLAND_DISPLAY")))
+			} else {
+				opt = append(opt, "-e", "DISPLAY")
+				opt = append(opt, "-v", "/tmp/.X11-unix:/tmp/.X11-unix")
+				opt = append(opt, "-v", fmt.Sprintf("%s:/root/.Xauthority", os.Getenv("XAUTHORITY")))
+			}
 		}
 
 		// Mount the shared directory
@@ -145,6 +153,9 @@ func init() {
 	// Optional flag for the recursive containerization
 	upCmd.Flags().
 		StringP("recursive", "r", "docker", "Recursive profile - docker, containerd or none")
+
+	// Optional flag for X11 forwarding instead of Wayland
+	upCmd.Flags().BoolP("x11", "x", false, "Use X11 forwarding instead of Wayland")
 
 	// Optional flag for additional arguments
 	upCmd.Flags().

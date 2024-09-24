@@ -210,7 +210,8 @@ RUN mkdir -p $NVM_DIR && \
 
 # Install Elixir
 # ---------------
-RUN apt update && \
+RUN add-apt-repository ppa:rabbitmq/rabbitmq-erlang && \
+    apt update && \
     $APT_INSTALL \
     elixir
 
