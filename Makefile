@@ -19,13 +19,20 @@ update:
 	@echo "${BOLD}Updating Dockerfiles to latest stable releases...${RESET}"
 	@python3 update.py
 
-.PHONY: images # Build all the images
+.PHONY: images # Build all the images and remove any dangling ones
 images: flux
 	@echo "${BOLD}Building images...${RESET}"
 	@./flux build -t main
 	@./flux build -t cuda -f devel/cuda.Dockerfile
 	@./flux build -t func -f devel/func.Dockerfile -u root
 	@./flux build -t tex -f devel/tex.Dockerfile
+	@docker image prune -f
+
+.PHONY: main # Build the main image
+main: flux
+	@echo "${BOLD}Building main image...${RESET}"
+	@./flux build -t main
+	@docker image prune -f
 
 .PHONY: help # Display the help message
 help:

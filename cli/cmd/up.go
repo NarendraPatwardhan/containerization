@@ -50,10 +50,19 @@ var upCmd = &cobra.Command{
 
 		opt := []string{
 			"run", "-it", "-d",
-			// Use all GPUs
-			"--gpus", "all,\"capabilities=compute,utility,graphics,display\"",
+
 			// Use the host network
 			"--network", "host",
+		}
+
+		// Get the no-gpu flag from the flags
+		noGPU, _ := cmd.Flags().GetBool("no-gpu")
+
+		if !noGPU {
+			opt = append(opt,
+				// Use all GPUs
+				"--gpus", "all,\"capabilities=compute,utility,graphics,display\"",
+			)
 		}
 
 		x11, _ := cmd.Flags().GetBool("x11")
@@ -153,6 +162,9 @@ func init() {
 	// Optional flag for the recursive containerization
 	upCmd.Flags().
 		StringP("recursive", "r", "docker", "Recursive profile - docker, containerd or none")
+
+	// Optional flag to disable GPU access
+	upCmd.Flags().BoolP("no-gpu", "g", false, "Disable GPU access")
 
 	// Optional flag for X11 forwarding instead of Wayland
 	upCmd.Flags().BoolP("x11", "x", false, "Use X11 forwarding instead of Wayland")
