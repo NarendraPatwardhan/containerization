@@ -154,7 +154,7 @@ RUN $PIP_INSTALL \
 # Install Rust
 # -------------
 ARG RUSTUP_VERSION="1.28.1"
-ARG RUST_VERSION="1.85.1"
+ARG RUST_VERSION="1.86.0"
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
@@ -170,7 +170,7 @@ RUN RUST_ARCH=x86_64-unknown-linux-gnu && \
 
 # Install Go
 # -----------
-ARG GO_VERSION="1.24.1"
+ARG GO_VERSION="1.24.2"
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -180,7 +180,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Deno
 # -------------
-ARG DENO_VERSION="2.2.6"
+ARG DENO_VERSION="2.2.11"
 
 RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip \
     --output deno.zip \
@@ -191,7 +191,7 @@ RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSIO
 # Install NVM and Node, enable alternative package managers
 # ----------------------------------------------------------
 ARG NVM_VERSION="0.40.2"
-ARG NODE_VERSION="23.10.0"
+ARG NODE_VERSION="23.11.0"
 
 ENV NVM_DIR=/usr/local/nvm \
     NODE_PATH=$NVM_DIR/v${NODE_VERSION}/lib/node_modules \
@@ -234,7 +234,7 @@ RUN apt update && \
 
 # Install Bazel
 # --------------
-ARG BAZELISK_VERSION="1.25.0"
+ARG BAZELISK_VERSION="1.26.0"
 
 RUN curl -fsSL -o /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 && chmod +x /usr/local/bin/bazel
 

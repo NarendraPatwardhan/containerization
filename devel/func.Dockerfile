@@ -41,7 +41,7 @@ RUN apt update && \
 
 # Install Go
 # -----------
-ARG GO_VERSION="1.24.1"
+ARG GO_VERSION="1.24.2"
 
 ENV PATH=$PATH:/usr/local/go/bin
 
@@ -51,7 +51,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Containerd
 # -------------------
-ARG CONTAINERD_VERSION="2.0.4"
+ARG CONTAINERD_VERSION="2.0.5"
 
 RUN  wget https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz -O /tmp/containerd.tar.gz && \
     tar -C /usr/local -xvf /tmp/containerd.tar.gz

@@ -57,7 +57,7 @@ RUN curl -fsSL https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZI
 # --------------
 # Install Bazel
 # --------------
-ARG BAZELISK_VERSION="1.25.0"
+ARG BAZELISK_VERSION="1.26.0"
 
 RUN curl -fsSL -o /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 && chmod +x /usr/local/bin/bazel
 
