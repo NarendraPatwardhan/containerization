@@ -1,5 +1,5 @@
-BOLD := \033[1m
-RESET := \033[0m
+BOLD := $(shell tput bold)
+RESET := $(shell tput sgr0)
 
 .DEFAULT_GOAL := help
 
