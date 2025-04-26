@@ -180,7 +180,7 @@ RUN curl -OL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
 
 # Install Deno
 # -------------
-ARG DENO_VERSION="2.2.11"
+ARG DENO_VERSION="2.2.12"
 
 RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip \
     --output deno.zip \
@@ -190,7 +190,7 @@ RUN curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSIO
 
 # Install NVM and Node, enable alternative package managers
 # ----------------------------------------------------------
-ARG NVM_VERSION="0.40.2"
+ARG NVM_VERSION="0.40.3"
 ARG NODE_VERSION="23.11.0"
 
 ENV NVM_DIR=/usr/local/nvm \
